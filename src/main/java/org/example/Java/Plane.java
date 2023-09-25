@@ -342,10 +342,6 @@ public class Plane {
         dividers(inst.nb_dividers, inst.capacity, inst.exits);
     }
 
-    public static void main(String[] args) {
-        //int[] exits = {3};
-        dividers(Instance.inst5);
-    }
 
 }
 
