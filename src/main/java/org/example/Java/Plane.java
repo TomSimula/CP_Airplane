@@ -134,8 +134,8 @@ public class Plane {
         System.out.println();
     }
 
-    public void debug(){
-
+    public void debug(boolean debug){
+        if (!debug) return;
         ArrayList<String> deb = new ArrayList<String>();
 
         for (int i = 0; i < this.m; i++) {
@@ -157,11 +157,12 @@ public class Plane {
     }
 
     //CONTRAINTES
-    public boolean DistisDiff() {
+    public boolean DistisDiff(boolean display) {
         //on va calculer le nombre de blocs de sièges entre chaque couple de séparateurs
         //et vérifier que ces distances sont toutes différentes
 
-        System.out.println("\n ---------------\n  Testing for distinct distances\n");
+        if (display) System.out.println("\n ---------------\n  Testing for distinct distances\n");
+
         ArrayList<Divider> dividers = new ArrayList<Divider>();
         List<Integer> distances = new ArrayList<Integer>();
 
@@ -178,13 +179,15 @@ public class Plane {
         for (Divider d : dividers) {
             s2.append(d.getPos()).append(" ");
         }
-        System.out.println("dividers : "+ s);
-        System.out.println("position : "+ s2+"\n");
+        if (display) {
+            System.out.println("dividers : " + s);
+            System.out.println("position : " + s2 + "\n");
+        }
 
         for (int i = 0; i < dividers.size(); i++) {
             for (int j = i+1; j < dividers.size(); j++) {
-                System.out.print("div" + dividers.get(i).getNum() +
-                              " ; div" + dividers.get(j).getNum());
+                if (display)System.out.print("div" + dividers.get(i).getNum() +
+                        " ; div" + dividers.get(j).getNum());
                 Divider d1 = dividers.get(i);
                 Divider d2 = dividers.get(j);
 
@@ -192,22 +195,26 @@ public class Plane {
                 System.out.println(" dist = " + dist);
                 //si la distance est déjà présente dans la liste, on retourne false
                 if (distances.contains(dist)) {
-                    System.out.println("distance égale trouvée");
+                    if(display) System.out.println("constraint [distinct distances] not ok");
                     return false;
                 }
                 //sinon on l'ajoute à la liste
                 distances.add(dist);
             }
         }
-        System.out.println("distances : " + distances.toString());
+
+        if (display) System.out.println("distances : " + distances.toString());
+
+        if(display) System.out.println("constraint [distinct distances] ok");
+
         return true;
     }
-    public boolean firstClassIsTwoBlocks() {
+    public boolean firstClassIsTwoBlocks(boolean display) {
         //on vérifie que la classe à l'avant de l'avion dispose d'au moins deux blocs
         //si un le premier séparateur est placé au niveau de la cabine de pilotage, on vérifie que sa distance avec le suivant est supérieure à 1
         //sinon on vérifie qu'il est positionné à au moins 2
-
-        System.out.println("\n ---------------\n  Testing for first Class Is Two Blocks wide");
+        boolean res = false;
+        if(display) System.out.println("\n ---------------\n  Testing for first Class Is Two Blocks wide");
 
         Divider d = getDiv(0);
         Divider d1 = getDiv(1);
@@ -216,21 +223,22 @@ public class Plane {
             if (d.getPos() == 0) {
                 {
                     int dist = getDistance(d, d1);
-                    System.out.println("dist = " + dist);
+                    if(display) System.out.println("dist = " + dist);
                     return dist >= 2;
                 }
-            } else return d.getPos() >= 2;
+            } else res = d.getPos() >= 2;
         }
 
-        System.out.println("test ok");
-        return true;
+        if(display && res) System.out.println("constraint [2Blocs] ok");
+        else if(display) System.out.println("constraint [2Blocs] not ok");
+        return res;
     }
-    public boolean atLeastOneExitFree() {
+    public boolean atLeastOneExitFree(boolean display) {
         //on vérifie qu'au moins une sortie de secours est libre
         ArrayList<Integer> tmp = new ArrayList<Integer>();
         ArrayList<Integer> divs = new ArrayList<Integer>();
 
-        System.out.println("\n ---------------\n  Testing for at Least One Exit Free\n");
+        if(display) System.out.println("\n ---------------\n  Testing for at Least One Exit Free\n");
 
         for (int e : this.exits) {
             tmp.add(e);
@@ -247,25 +255,34 @@ public class Plane {
                 tmp.remove((Integer) d);
             }
         }
-        System.out.println("exits free : " + tmp.toString());
-        return !tmp.isEmpty();
+        if(display) System.out.println("exits free : " + tmp.toString());
+
+        boolean res = !tmp.isEmpty();
+        if(display && res) System.out.println("constraint [1 exit free] ok");
+        else if(display) System.out.println("constraint [1 exit free] not ok");
+        return res;
     }
 
     //TEST DE FIN
-    public boolean allDivsPlaced() {
+    public boolean allDivsPlaced(boolean display) {
         //on vérifie que tous les séparateurs ont été placés
+
+        if(display) System.out.println("\n ---------------\n  Testing if all dividers are placed");
+
         int cpt = 0;
         for (PlaneElement e : this.elements) {
             if (e != null && e.getType() == elemType.DIVIDER) {
                 cpt++;
             }
         }
+        if(display && cpt == this.n) System.out.println("constraint [all dividers placed] ok");
+        else if(display) System.out.println("constraint [all dividers placed] not ok");
         return cpt == this.n;
     }
 
     //RUN
 
-    public static void dividers(int nbDivs, int nbBlocks, int[] exits) {
+    public static void dividers(int nbDivs, int nbBlocks, int[] exits, boolean display) {
 
         //initialisation de l'avion
         Plane plane = new Plane(nbDivs, nbBlocks, exits);
@@ -278,19 +295,21 @@ public class Plane {
         int i = 0;
         int n = 0;
 
-        System.out.println("n = " + n + ", i = " + i);
-        plane.debug();
+        //System.out.println("n = " + n + ", i = " + i);
+        //plane.debug(display);
 
-        while( n < plane.m && n > -1 && !plane.allDivsPlaced() ) {
+        while( n < plane.m && n > -1 && !plane.allDivsPlaced(display) ) {
 
-            System.out.print("etat actuel de la recherche : ");
-            plane.debug();
-            System.out.println(" début de boucle n = " + n + ", i = " + i);
+            if (display) {
+                System.out.print("\nEtat actuel de la recherche : ");
+                plane.debug(display);
+                System.out.println(" début de boucle n = " + n + ", i = " + i);
+            }
 
             //si la postion est hors de la taille de l'avion, la combinaison n'est pas bonne
             if (i > plane.m) {
 
-                System.out.println("##################\nOUT OF BOUNDS : (" + i + " >=  " + plane.m + ")");
+                if (display) System.out.println("##################\nOUT OF BOUNDS : (" + i + " >=  " + plane.m + ")");
 
                 //on se place sur le diviseur n-1
                 n--;
@@ -304,7 +323,7 @@ public class Plane {
                 i++;
 
                 //et on reprend la recherche
-                System.out.println("reprise à n = " + n + ", i = " + i+"\n##################");
+                if (display) System.out.println("reprise à n = " + n + ", i = " + i+"\n##################");
 
                 //mais si on est encore en dehors de l'avion, on recule encore plus
             }
@@ -315,10 +334,10 @@ public class Plane {
                 i = dividers.get(n).getPos() + 1;
                 //Overkill ? => checker si juste i++ fait pareil
 
-                System.out.println("div placé : n = " + n + ", i++ = " + i);
-                plane.debug();
+                if (display) System.out.println("div placé : n = " + n + ", i++ = " + i);
+                //plane.debug(debug);
 
-                if (plane.DistisDiff() && plane.firstClassIsTwoBlocks() && plane.atLeastOneExitFree()) {
+                if (plane.DistisDiff(display) && plane.firstClassIsTwoBlocks(display) && plane.atLeastOneExitFree(display)) {
                     n++;
                     System.out.println("tests ok\n");
                 } else {
@@ -338,8 +357,8 @@ public class Plane {
         }
 
     }
-    public static void dividers(Instance inst) {
-        dividers(inst.nb_dividers, inst.capacity, inst.exits);
+    public static void dividers(Instance inst, boolean debug) {
+        dividers(inst.nb_dividers, inst.capacity, inst.exits, debug);
     }
 
 
