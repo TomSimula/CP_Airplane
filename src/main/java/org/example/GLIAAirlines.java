@@ -32,7 +32,7 @@ public class GLIAAirlines {
 
 		if(allSolutions){
 			while (solution != null){
-				System.out.println(solution);
+				System.out.println(solution.retrieveIntVars(false));
 				solution = model.getSolver().findSolution();
 			}
 		}
@@ -48,10 +48,10 @@ public class GLIAAirlines {
 		// VARIABLES
 		dividers = new IntVar[inst.nb_dividers];
 
-		dividers[0] = model.intVar("D"+0, 0);
+		dividers[0] = model.intVar("D"+1, 0);
 		dividers[inst.nb_dividers-1] = model.intVar("D"+inst.nb_dividers, inst.capacity);
 		for(int i = 1; i < inst.nb_dividers-1; i++){
-			dividers[i] = model.intVar("D"+i, 1, inst.capacity-1);
+			dividers[i] = model.intVar("D"+(i+1), 1, inst.capacity-1);
 		}
 
 		IntVar[] distances = new IntVar[(inst.nb_dividers*inst.nb_dividers-inst.nb_dividers)/2];
@@ -70,9 +70,9 @@ public class GLIAAirlines {
 		model.among(model.intVar(inst.exits.length-1), dividers, inst.exits).post();
 		model.increasing(dividers, 1).post();
 
-		for (Constraint c: model.getCstrs()) {
+		/*for (Constraint c: model.getCstrs()) {
 			System.out.println(c);
-		}
+		}*/
 	}
 
 
