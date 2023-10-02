@@ -2,9 +2,13 @@ package org.example;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
+import org.chocosolver.solver.Solver;
+import org.chocosolver.solver.search.strategy.Search;
+import org.chocosolver.solver.search.strategy.strategy.AbstractStrategy;
 import org.chocosolver.solver.variables.IntVar;
-import org.chocosolver.solver.variables.RealVar;
 import org.chocosolver.solver.variables.Variable;
+
+import static org.chocosolver.solver.search.strategy.Search.*;
 
 public class GLIAAirlines {
 
@@ -27,12 +31,14 @@ public class GLIAAirlines {
 		Solution solution = model.getSolver().findSolution();
 
 		if(allSolutions){
+			int countSol = 1;
 			while (solution != null){
-				prettyPrintSol();
+				prettyPrintSol(countSol);
 				solution = model.getSolver().findSolution();
+				countSol++;
 			}
 		} else {
-			prettyPrintSol();
+			prettyPrintSol(1);
 		}
 
 		model.getSolver().printStatistics();
@@ -66,24 +72,45 @@ public class GLIAAirlines {
 		model.arithm(dividers[1], "-", dividers[0], ">=", 2).post();
 		count = 0;
 		for (int i = 0; i < inst.nb_dividers; i++) {
+			model.notMember(dividers[i], inst.exits).post();
 			for (int j = i+1; j < inst.nb_dividers; j++) {
-				model.arithm(dividers[j], "-", dividers[i], "=", distances[count]).post();
+				/*model.arithm(dividers[j], "-", dividers[i], "=", distances[count]).post();
+				count++;*/
+				model.scalar(new IntVar[]{dividers[j], dividers[i]}, new int[]{1, -1}, "=", distances[count]).post();
 				count++;
 			}
 		}
+
 		model.allDifferent(distances).post();
-		model.among(model.intVar("", inst.exits.length-1), dividers, inst.exits).post();
 
 		model.increasing(dividers, 1).post();
 	}
 
-	private void prettyPrintSol(){
-		String sol = "";
+	private void prettyPrintSol(int i){
+		String sol = "Solution " + i + ": ";
 		for (Variable var : model.getVars()) {
-			//if (var.toString().contains("D"))
 				sol += var + "; ";
 		}
 		System.out.println(sol);
+	}
+
+	private void testStrats(){
+		Solver solver = model.getSolver();
+		AbstractStrategy<IntVar>[] strats = new AbstractStrategy[]{
+				minDomLBSearch(model.retrieveIntVars(false)),
+				Search.minDomUBSearch(model.retrieveIntVars(false)),
+				intVarSearch(model.retrieveIntVars(false)),
+				Search.inputOrderLBSearch(model.retrieveIntVars(false)),
+				Search.inputOrderUBSearch(model.retrieveIntVars(false)),
+				Search.activityBasedSearch(model.retrieveIntVars(false)),
+				randomSearch(model.retrieveIntVars(false), 37),
+		};
+
+		for (AbstractStrategy<IntVar> strat : strats) {
+			solver.setSearch(strat);
+			solver.findAllSolutions();
+			System.out.println(solver.getTimeCount());
+		}
 	}
 
 }
