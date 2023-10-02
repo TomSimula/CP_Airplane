@@ -219,7 +219,10 @@ public class Plane {
         Divider d = getDiv(0);
         Divider d1 = getDiv(1);
 
-        if (d != null && d1 != null) {
+        if (d1 == null) {
+            res = (d.getPos() == 0 || d.getPos() >= 2);
+        }
+        else if (d != null) {
             if (d.getPos() == 0) {
                 {
                     int dist = getDistance(d, d1);
@@ -233,31 +236,27 @@ public class Plane {
         else if(display) System.out.println("constraint [2Blocs] not ok");
         return res;
     }
-    public boolean atLeastOneExitFree(boolean display) {
-        //on vérifie qu'au moins une sortie de secours est libre
-        ArrayList<Integer> tmp = new ArrayList<Integer>();
+    public boolean allExitsFree(boolean display) {
+        //on vérifie que les sorties de secours sont toutes libres
         ArrayList<Integer> divs = new ArrayList<Integer>();
+        ArrayList<Integer> tmp = new ArrayList<Integer>();
+        boolean res = true;
 
-        if(display) System.out.println("\n ---------------\n  Testing for at Least One Exit Free\n");
+        if(display) System.out.println("\n ---------------\n  Testing for Exits Free\n");
 
-        for (int e : this.exits) {
-            tmp.add(e);
+        for (int i : this.exits) {
+            tmp.add(i);
         }
 
         for (PlaneElement p : this.elements) {
             if (p != null && p.getType() == elemType.DIVIDER) {
-                Divider d = (Divider) p;
-                divs.add(d.getPos());
-            }
-        }
-        for (Integer d : divs) {
-            if (tmp.contains(d)) {
-                tmp.remove((Integer) d);
-            }
-        }
-        if(display) System.out.println("exits free : " + tmp.toString());
+                res &= !tmp.contains(p.getPos());
 
-        boolean res = !tmp.isEmpty();
+            }
+        }
+
+        if(display) System.out.println("All exits free : " + res);
+
         if(display && res) System.out.println("constraint [1 exit free] ok");
         else if(display) System.out.println("constraint [1 exit free] not ok");
         return res;
@@ -335,9 +334,9 @@ public class Plane {
                 //Overkill ? => checker si juste i++ fait pareil
 
                 if (display) System.out.println("div placé : n = " + n + ", i++ = " + i);
-                //plane.debug(debug);
+                plane.debug(display);
 
-                if (plane.DistisDiff(display) && plane.firstClassIsTwoBlocks(display) && plane.atLeastOneExitFree(display)) {
+                if (plane.DistisDiff(display) && plane.firstClassIsTwoBlocks(display) && plane.allExitsFree(display)) {
                     n++;
                     System.out.println("tests ok\n");
                 } else {

@@ -6,7 +6,7 @@ public class BruteForceRun {
 
     public static void main(String[] args) {
         //int[] exits = {3};
-        boolean display = true;
-        dividers(Instance.inst1, display);
+        boolean display = false;
+        dividers(Instance.inst4, display);
     }
 }
