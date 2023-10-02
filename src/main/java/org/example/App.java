@@ -7,15 +7,16 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.example.Java.BruteForceRun;
 
 
-
-public class App 
+public class App
 {
 	
 	private static Instance inst = Instance.inst1;
 	private static long timeout = 300000; // five minutes
 	private static boolean allSolutions;
+	private static boolean noChoco;
 
 	
 	public static void main(String[] args) throws ParseException {
@@ -34,8 +35,8 @@ public class App
 		for (Option opt : line.getOptions()) {
 			checkOption(line, opt.getLongOpt());
 		}
-
-		new GLIAAirlines().solve(inst, timeout, allSolutions);
+		if (noChoco) new BruteForceRun().Solve(inst, false, true);
+		else new GLIAAirlines().solve(inst, timeout, allSolutions);
 	}
 	
 	
@@ -54,12 +55,16 @@ public class App
 		final Option limitOption = Option.builder("t").longOpt("timeout").hasArg(true).argName("timeout in ms")
 				.desc("Set the timeout limit to the specified time").required(false).build();
 
+		final Option BasicVersion = Option.builder("b").longOpt("basic").hasArg(false).desc("Search solution without Choco Solver")
+				.required(false).build();
+
 		// Create the options list
 		final Options options = new Options();
 		options.addOption(instOption);
 		options.addOption(allsolOption);
 		options.addOption(limitOption);
 		options.addOption(helpFileOption);
+		options.addOption(BasicVersion);
 
 		return options;
 	}
@@ -77,6 +82,9 @@ public class App
 			break;
 		case "all":
 			allSolutions = true;
+			break;
+		case "basic":
+			noChoco = true;
 			break;
 		default: {
 			System.err.println("Bad parameter: " + option);

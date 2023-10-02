@@ -1,5 +1,7 @@
 package org.example.Java;
 
+import org.example.Instance;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,7 +124,6 @@ public class Plane {
             s2.set(d.getPos(), "|"+d.getNum());
         }
 
-        System.out.println("Instance : n = " + this.n + ", m = " + this.m + ", exits = " + Arrays.toString(this.exits));
         System.out.println("\n avant resolution : ");
         for (String s : s1) {
             System.out.print(s);
@@ -192,7 +193,7 @@ public class Plane {
                 Divider d2 = dividers.get(j);
 
                 int dist = getDistance(d1, d2);
-                System.out.println(" dist = " + dist);
+                if (display) System.out.println(" dist = " + dist);
                 //si la distance est déjà présente dans la liste, on retourne false
                 if (distances.contains(dist)) {
                     if(display) System.out.println("constraint [distinct distances] not ok");
@@ -281,7 +282,7 @@ public class Plane {
 
     //RUN
 
-    public static void dividers(int nbDivs, int nbBlocks, int[] exits, boolean display) {
+    public static void dividers(int nbDivs, int nbBlocks, int[] exits, boolean display, boolean debug) {
 
         //initialisation de l'avion
         Plane plane = new Plane(nbDivs, nbBlocks, exits);
@@ -301,7 +302,7 @@ public class Plane {
 
             if (display) {
                 System.out.print("\nEtat actuel de la recherche : ");
-                plane.debug(display);
+                plane.debug(debug);
                 System.out.println(" début de boucle n = " + n + ", i = " + i);
             }
 
@@ -338,9 +339,9 @@ public class Plane {
 
                 if (plane.DistisDiff(display) && plane.firstClassIsTwoBlocks(display) && plane.allExitsFree(display)) {
                     n++;
-                    System.out.println("tests ok\n");
+                    if (display)System.out.println("tests ok\n");
                 } else {
-                    System.out.println("tests pas ok\n");
+                    if (display)System.out.println("tests pas ok\n");
                     plane.elements[dividers.get(n).getPos()] = null;
                     dividers.remove(n);
                 }
@@ -356,8 +357,9 @@ public class Plane {
         }
 
     }
-    public static void dividers(Instance inst, boolean debug) {
-        dividers(inst.nb_dividers, inst.capacity, inst.exits, debug);
+    public static void dividers(Instance inst, boolean display, boolean debug) {
+        System.out.println("Instance : n = " + inst.nb_dividers + ", m = " + inst.capacity + ", exits = " + Arrays.toString(inst.exits)+ "\n");
+        dividers(inst.nb_dividers, inst.capacity, inst.exits, display, debug);
     }
 
 

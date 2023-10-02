@@ -1,6 +1,6 @@
 package org.example;
 
-enum Instance {
+public enum Instance {
 		sujet(5, 11, new int[] { 3 }),
 		inst1(6, 18, new int[] { 4, 11 }),
 
@@ -18,8 +18,8 @@ enum Instance {
 
 		inst8(14, 125, new int[] { 50, 100 }),;
 
-		final int nb_dividers, capacity;
-		final int[] exits;
+		public final int nb_dividers, capacity;
+		public final int[] exits;
 
 		Instance(int nbd, int c, int[] e) {
 			this.nb_dividers = nbd;
