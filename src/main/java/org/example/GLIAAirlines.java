@@ -2,9 +2,14 @@ package org.example;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
+import org.chocosolver.solver.Solver;
+import org.chocosolver.solver.search.strategy.Search;
+import org.chocosolver.solver.search.strategy.strategy.AbstractStrategy;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.variables.RealVar;
 import org.chocosolver.solver.variables.Variable;
+
+import static org.chocosolver.solver.search.strategy.Search.*;
 
 public class GLIAAirlines {
 
@@ -72,7 +77,6 @@ public class GLIAAirlines {
 			}
 		}
 		model.allDifferent(distances).post();
-		model.among(model.intVar("", inst.exits.length-1), dividers, inst.exits).post();
 
 		model.increasing(dividers, 1).post();
 	}
@@ -84,6 +88,25 @@ public class GLIAAirlines {
 				sol += var + "; ";
 		}
 		System.out.println(sol);
+	}
+
+	private void testStrats(){
+		Solver solver = model.getSolver();
+		AbstractStrategy<IntVar>[] strats = new AbstractStrategy[]{
+				minDomLBSearch(model.retrieveIntVars(false)),
+				Search.minDomUBSearch(model.retrieveIntVars(false)),
+				intVarSearch(model.retrieveIntVars(false)),
+				Search.inputOrderLBSearch(model.retrieveIntVars(false)),
+				Search.inputOrderUBSearch(model.retrieveIntVars(false)),
+				Search.activityBasedSearch(model.retrieveIntVars(false)),
+				randomSearch(model.retrieveIntVars(false), 37),
+		};
+
+		for (AbstractStrategy<IntVar> strat : strats) {
+			solver.setSearch(strat);
+			solver.findAllSolutions();
+			System.out.println(solver.getTimeCount());
+		}
 	}
 
 }
