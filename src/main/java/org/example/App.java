@@ -17,6 +17,7 @@ public class App
 	private static long timeout = 300000; // five minutes
 	private static boolean allSolutions;
 	private static boolean noChoco;
+	private static boolean compareStrat;
 
 	
 	public static void main(String[] args) throws ParseException {
@@ -28,7 +29,7 @@ public class App
 		boolean helpMode = line.hasOption("help") || args.length == 0;
 		if (helpMode) {
 			final HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("cocoAirlines", options, true);
+			formatter.printHelp("LightningAirlines", options, true);
 			System.exit(0);
 		}
 		// Check arguments and options
@@ -36,6 +37,8 @@ public class App
 			checkOption(line, opt.getLongOpt());
 		}
 		if (noChoco) new BruteForceRun().Solve(inst, false, true);
+		else if (compareStrat) new GLIAAirlines(inst, timeout, allSolutions).testStrats();
+
 		else new GLIAAirlines().solve(inst, timeout, allSolutions);
 	}
 	
@@ -58,6 +61,9 @@ public class App
 		final Option BasicVersion = Option.builder("b").longOpt("basic").hasArg(false).desc("Search solution without Choco Solver")
 				.required(false).build();
 
+		final Option CompareStrat = Option.builder("c").longOpt("compare").hasArg(false).desc("search solution with different strategies and compare them")
+				.required(false).build();
+
 		// Create the options list
 		final Options options = new Options();
 		options.addOption(instOption);
@@ -65,6 +71,7 @@ public class App
 		options.addOption(limitOption);
 		options.addOption(helpFileOption);
 		options.addOption(BasicVersion);
+		options.addOption(CompareStrat);
 
 		return options;
 	}
@@ -85,6 +92,9 @@ public class App
 			break;
 		case "basic":
 			noChoco = true;
+			break;
+		case "compare":
+			compareStrat = true;
 			break;
 		default: {
 			System.err.println("Bad parameter: " + option);

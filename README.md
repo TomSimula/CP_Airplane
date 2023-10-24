@@ -42,6 +42,12 @@ Permet de lister toutes les solutions qui satisfont le problème et non pas la p
 | Option | Description                |
 | :-------- | :------------------------- |
 | `-t,--timeout <timeout en ms>` |Set the timeout limit to the specified time |
+
+
+| Option | Description                                                                                |
+| :-------- |:-------------------------------------------------------------------------------------------|
+| `-c,--compare `| search solution with different strategies and compare them **(incompatible avec '-b')**    |
+
      	
 
 

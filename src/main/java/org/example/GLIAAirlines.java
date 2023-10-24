@@ -17,6 +17,17 @@ public class GLIAAirlines {
 
 	Model model;
 
+	//constructor
+	public GLIAAirlines() {
+	}
+
+	public GLIAAirlines(Instance inst, long timeout, boolean allSolutions) {
+		buildModel(inst);
+		model.getSolver().limitTime(timeout);
+		StringBuilder st = new StringBuilder(
+				String.format(model.getName() + "-- %s\n", inst.nb_dividers, " X ", inst.capacity));
+	}
+
 	
 
 	public void solve(Instance inst, long timeout, boolean allSolutions) {
@@ -94,7 +105,7 @@ public class GLIAAirlines {
 		System.out.println(sol);
 	}
 
-	private void testStrats(){
+	public void testStrats(){
 		Solver solver = model.getSolver();
 		AbstractStrategy<IntVar>[] strats = new AbstractStrategy[]{
 				minDomLBSearch(model.retrieveIntVars(false)),
@@ -107,10 +118,10 @@ public class GLIAAirlines {
 		};
 
 		for (AbstractStrategy<IntVar> strat : strats) {
+			solver.reset();
 			solver.setSearch(strat);
 			solver.findAllSolutions();
-			System.out.println(solver.getTimeCount());
+			solver.printStatistics();
 		}
 	}
-
 }

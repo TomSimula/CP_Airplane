@@ -1,7 +1,7 @@
 package org.example;
 
 public enum Instance {
-		sujet(5, 11, new int[] { 3 }),
+		inst0(5, 11, new int[] { 3 }),
 		inst1(6, 18, new int[] { 4, 11 }),
 
 		inst2(7, 25, new int[] { 7 }),
