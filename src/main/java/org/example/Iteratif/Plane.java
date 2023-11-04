@@ -1,4 +1,4 @@
-package org.example.Java.Iteratif;
+package org.example.Iteratif;
 
 import org.example.Instance;
 

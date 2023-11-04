@@ -1,4 +1,4 @@
-package org.example.Java.Iteratif;
+package org.example.Iteratif;
 
 public abstract class PlaneElement {
 

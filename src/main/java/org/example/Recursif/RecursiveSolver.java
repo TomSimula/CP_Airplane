@@ -1,4 +1,4 @@
-package org.example.Java.Recursif;
+package org.example.Recursif;
 
 import org.example.Instance;
 

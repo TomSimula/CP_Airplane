@@ -7,8 +7,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.example.Java.Iteratif.BruteForceRun;
-import org.example.Java.Recursif.RecursiveSolver;
+import org.example.Iteratif.BruteForceRun;
+import org.example.Recursif.RecursiveSolver;
 
 
 public class App

@@ -1,8 +1,8 @@
-package org.example.Java.Iteratif;
+package org.example.Iteratif;
 
 import org.example.Instance;
 
-import static org.example.Java.Iteratif.Plane.*;
+import static org.example.Iteratif.Plane.*;
 
 public class BruteForceRun {
 
