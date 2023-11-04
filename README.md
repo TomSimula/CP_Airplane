@@ -15,8 +15,8 @@ java -jar LightningAirlines.jar [-bi|-br] [-a] [-t <timeout in ms>]  [-i <aircra
 
 | Option | Description                |
 | :-------- | :------------------------- |
-| `-bi,--basic_iterative` | Chercher la première solutions via un algorithme itératif. |
-| `-br,--basic_recursive` | Chercher la première solutions via un algorithme récursif. |
+| `-bi,--basic_iterative` | Chercher la première solution via un algorithme itératif. |
+| `-br,--basic_recursive` | Chercher la première solution via un algorithme récursif. |
 
 Attention : L'instance 8 prend un temps important pour terminer.
 
@@ -42,12 +42,12 @@ Permet de lister toutes les solutions qui satisfont le problème et non pas la p
 
 | Option | Description                |
 | :-------- | :------------------------- |
-| `-t,--timeout <timeout en ms>` |Set the timeout limit to the specified time |
+| `-t,--timeout <timeout en ms>` |Définir le temps limite d'attente avant arrêt de la recherche |
 
 
 | Option | Description                                                                                |
 | :-------- |:-------------------------------------------------------------------------------------------|
-| `-c,--compare `| search solution with different strategies and compare them **(incompatible avec '-bi' et '-br')**    |
+| `-c,--compare `| Rechercher les solutions via différentes straégies et en comparer les résultats **(incompatible avec '-bi' et '-br')**    |
 
      	
 
