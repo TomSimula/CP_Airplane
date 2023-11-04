@@ -7,7 +7,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.example.Java.BruteForceRun;
+import org.example.Java.Iteratif.BruteForceRun;
+import org.example.Java.Recursif.RecursiveSolver;
 
 
 public class App
@@ -16,7 +17,8 @@ public class App
 	private static Instance inst = Instance.inst1;
 	private static long timeout = 300000; // five minutes
 	private static boolean allSolutions;
-	private static boolean noChoco;
+	private static boolean bi;
+	private static boolean br;
 	private static boolean compareStrat;
 
 	
@@ -36,7 +38,8 @@ public class App
 		for (Option opt : line.getOptions()) {
 			checkOption(line, opt.getLongOpt());
 		}
-		if (noChoco) new BruteForceRun().Solve(inst, false, true);
+		if (bi) new BruteForceRun().Solve(inst, false, true);
+		else if (br) new RecursiveSolver(inst).solve(false);
 		else if (compareStrat) new GLIAAirlines(inst, timeout, allSolutions).testStrats();
 
 		else new GLIAAirlines().solve(inst, timeout, allSolutions);
@@ -58,7 +61,10 @@ public class App
 		final Option limitOption = Option.builder("t").longOpt("timeout").hasArg(true).argName("timeout in ms")
 				.desc("Set the timeout limit to the specified time").required(false).build();
 
-		final Option BasicVersion = Option.builder("b").longOpt("basic").hasArg(false).desc("Search solution without Choco Solver")
+		final Option BasicIterativeVersion = Option.builder("bi").longOpt("basic_iterative").hasArg(false).desc("Search solution without Choco Solver iteratively")
+				.required(false).build();
+
+		final Option BasicRecursiveVersion = Option.builder("br").longOpt("basic_recursive").hasArg(false).desc("Search solution without Choco Solver recursively")
 				.required(false).build();
 
 		final Option CompareStrat = Option.builder("c").longOpt("compare").hasArg(false).desc("search solution with different strategies and compare them")
@@ -70,7 +76,8 @@ public class App
 		options.addOption(allsolOption);
 		options.addOption(limitOption);
 		options.addOption(helpFileOption);
-		options.addOption(BasicVersion);
+		options.addOption(BasicIterativeVersion);
+		options.addOption(BasicRecursiveVersion);
 		options.addOption(CompareStrat);
 
 		return options;
@@ -90,8 +97,11 @@ public class App
 		case "all":
 			allSolutions = true;
 			break;
-		case "basic":
-			noChoco = true;
+		case "basic_iterative":
+			bi = true;
+			break;
+		case "basic_recursive":
+			br = true;
 			break;
 		case "compare":
 			compareStrat = true;
