@@ -9,7 +9,7 @@ public class RecursiveSolver {
         this.inst = inst;
     }
 
-    public void solve(boolean allSol){
+    public void solve(){
         long start = System.currentTimeMillis();
         int divider[] = new int[inst.nb_dividers];
         divider[0] = 0;

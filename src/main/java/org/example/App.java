@@ -39,7 +39,7 @@ public class App
 			checkOption(line, opt.getLongOpt());
 		}
 		if (bi) new BruteForceRun().Solve(inst, false, true);
-		else if (br) new RecursiveSolver(inst).solve(false);
+		else if (br) new RecursiveSolver(inst).solve();
 		else if (compareStrat) new GLIAAirlines(inst, timeout, allSolutions).testStrats();
 
 		else new GLIAAirlines().solve(inst, timeout, allSolutions);
