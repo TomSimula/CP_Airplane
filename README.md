@@ -9,7 +9,7 @@ Rendu du Projet de Programmation par contraintes dans le cadre de l'UE HAI916I
 Lors du lancement de l’application, veuillez éditer les options de lancement comme indiqué ci-dessous:
 
 ```bash
-java -jar LightningAirlines [-bi|-br] [-a] [-t <timeout in ms>]  [-i <aircraft instance>] [-h] [-c]
+java -jar LightningAirlines.jar [-bi|-br] [-a] [-t <timeout in ms>]  [-i <aircraft instance>] [-h] [-c]
 ```
 ### arguments
 
